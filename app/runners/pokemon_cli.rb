@@ -21,31 +21,45 @@ class PokemonCli
   end
 
   def help
-    puts "Type 'exit' to exit'"
+    puts "Type 'exit' to exit"
     puts "Type 'help' to view this menu again"
     puts "Type 'characters' to view the list of characters"
+    spacer
+  end
+
+  def attack_help
+    puts "Type 'exit' to exit"
+    puts "Type 'help' to view this menu again"
     puts "Type 'moves' to view a list of moves"
+    puts "Type 'health' to view health stats."
     spacer
   end
 
   def player_pick(number)
     character = nil
-
-    loop do
-      choice = prompt_user(number)
-      spacer
-      case choice
-      when "characters"
-        Character::CHARACTERS.each { |name| puts name }
+    begin
+      loop do
+        choice = prompt_user(number)
         spacer
-      when "help"
-        help
-      when "exit"
-        abort
-      else
-        character = PokemonApi.pick_character(choice)
-        break
+        case choice
+        when "characters"
+          Character::CHARACTERS.each { |name| puts name }
+          spacer
+        when "help"
+          help
+        when "exit"
+          abort
+        when "quit"
+          abort
+        else
+          character = PokemonApi.pick_character(choice)
+          break
+        end
       end
+      rescue
+        puts "Please choose a REAL pokemon"
+        spacer
+      retry
     end
     spacer
     character
@@ -62,8 +76,14 @@ class PokemonCli
         attacker.attacks
         spacer
       when "help"
-        help
+        attack_help
+      when "health"
+        puts "#{attacker.name.upcase} health: #{attacker.health}"
+        puts "#{defender.name.upcase} health: #{defender.health}"
+        spacer
       when "exit"
+        abort
+      when "quit"
         abort
       else
         attacker.attack(defender, choice)
@@ -77,7 +97,7 @@ class PokemonCli
   end
 
   def welcome
-    2.times { spacer }
+    system ('clear')
     puts "                 -------------PokeBattle-------------\n"
     print_logo
     spacer
@@ -99,7 +119,7 @@ class PokemonCli
     puts "                         '.\\     /_.'    /  "
     puts "                          |'-.-',  `; _.'   "
     puts "                          |  |  |   |`     "
-    puts "                          `\"\"`\"\"`\"\"\"\"`       "
+    puts "                          `\"\"`\"\"`\"\"\"\"` "
   end
 
   def winner?
@@ -115,19 +135,28 @@ class PokemonCli
   end
 
   def play_turn
-    loop do
+    until winner?
       player_attack(player_1, player_2)
       switch_user
-      break if winner?
     end
+  end
+
+  def move_up
+    print "\033[F"
+  end
+
+  def play_battle
+    puts "--------------  FIGHT! --------------"
+    spacer
   end
 
   def play
     welcome
 
     @player_1 = player_pick(1)
+    3.times { move_up } 
     @player_2 = player_pick(2)
-
+    play_battle
     play_turn
 
     display_winner

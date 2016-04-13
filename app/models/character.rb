@@ -12,6 +12,9 @@ class Character
     "lucario",
     "bulbasaur"
   ]
+
+  EXCLAMATIONS = ["BAM","BOOM", "WHAM", "KA-POW", "SLASH"]
+
   attr_accessor :health
   attr_reader :moves, :name, :base_experience
 
@@ -23,7 +26,10 @@ class Character
   end
 
   def attack(defender, attack)
-    defender.health -= attack_value(attack)
+    av = attack_value(attack)
+    defender.health -= av
+    puts "#{EXCLAMATIONS.sample} you just got --#{attack}ed-- for #{av} hp"
+    spacer
   end
 
   # def attack_value(attack)
@@ -35,11 +41,11 @@ class Character
 
   def attack_value(attack)
     unless moves.include?(attack)
-      puts "--------------Lern to spell--------------\n"
+      puts "--------------  Lern to spell  --------------\n"
       self.health -= 5
       0
     else
-      puts "--------------  Next Move  --------------\n"
+      puts "--------------    Next Move    --------------\n"
       [*1..50].sample
     end
   end
@@ -52,7 +58,6 @@ class Character
     last_move = moves.pop
     moves.each { |move| print "#{move}, " }
     print "#{last_move}. \n"
-
     moves << last_move
   end
 end
