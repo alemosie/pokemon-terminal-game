@@ -1,17 +1,18 @@
-require 'byebug'
 class PokemonCli
   attr_accessor :player_1, :player_2
   def prompt_user(number)
-    puts "Player #{number} choose a character."
-    puts "Type 'characters' to see a list of characters"
+    puts "PLAYER #{number} choose a character."
+    puts "Type 'characters' to see a list of characters."
     puts "If you'd like a character not listed choose at your own risk."
+    puts "Type 'help' at anytime to see game options."
     spacer
     gets.chomp.strip.downcase
   end
 
   def prompt_attack(attacker)
-    puts "#{attacker.name.upcase} choose an attack."
+    puts "#{attacker.name.upcase} choose an attack.                                                     "
     puts "Type 'moves' to see a list of moves."
+    puts "Type 'health' for hp values"
     spacer
     gets.chomp.strip.downcase
   end
@@ -32,7 +33,7 @@ class PokemonCli
     puts "Type 'help' to view this menu again"
     puts "Type 'moves' to view a list of moves"
     puts "Type 'health' to view health stats."
-    spacer
+
   end
 
   def player_pick(number)
@@ -40,11 +41,9 @@ class PokemonCli
     begin
       loop do
         choice = prompt_user(number)
-        spacer
         case choice
         when "characters"
           Character::CHARACTERS.each { |name| puts name }
-          spacer
         when "help"
           help
         when "exit"
@@ -58,10 +57,10 @@ class PokemonCli
       end
       rescue
         puts "Please choose a REAL pokemon"
-        spacer
+
       retry
     end
-    spacer
+
     character
   end
 
@@ -70,14 +69,17 @@ class PokemonCli
 
     loop do
       choice = prompt_attack(attacker)
-      spacer
+
       case choice
       when "moves"
         attacker.attacks
         spacer
       when "help"
+        move_up
         attack_help
+        spacer
       when "health"
+        spacer
         puts "#{attacker.name.upcase} health: #{attacker.health}"
         puts "#{defender.name.upcase} health: #{defender.health}"
         spacer
@@ -98,9 +100,7 @@ class PokemonCli
 
   def welcome
     system ('clear')
-    puts "                 -------------PokeBattle-------------\n"
     print_logo
-    spacer
   end
 
   def spacer
@@ -108,6 +108,7 @@ class PokemonCli
   end
 
   def print_logo
+    puts "                 -------------PokeBattle-------------\n"
     puts "                      ;-.               ,  "
     puts "                      \\ '.           .'/    "
     puts "                       \\  \\ .---. .-' /     "
@@ -141,11 +142,13 @@ class PokemonCli
     end
   end
 
-  def move_up
-    print "\033[F"
+  def clear
+    system ('clear')
+    print_logo
   end
 
   def play_battle
+    system ('clear')
     puts "--------------  FIGHT! --------------"
     spacer
   end
@@ -154,8 +157,10 @@ class PokemonCli
     welcome
 
     @player_1 = player_pick(1)
-    3.times { move_up } 
+    clear
     @player_2 = player_pick(2)
+    clear
+
     play_battle
     play_turn
 

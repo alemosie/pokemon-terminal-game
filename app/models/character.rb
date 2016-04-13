@@ -26,9 +26,8 @@ class Character
   end
 
   def attack(defender, attack)
-    av = attack_value(attack)
-    defender.health -= av
-    puts "#{EXCLAMATIONS.sample} you just got --#{attack}ed-- for #{av} hp"
+    system ('clear')
+    defender.health -= attack_value(attack)
     spacer
   end
 
@@ -41,12 +40,15 @@ class Character
 
   def attack_value(attack)
     unless moves.include?(attack)
-      puts "--------------  Lern to spell  --------------\n"
+      puts "--------------    Next Move    --------------\n"
+      puts "Lern to spell.  You just lost your turn and 5 hp :)"
       self.health -= 5
       0
     else
+      av = [*1..50].sample + (base_experience / 20)
       puts "--------------    Next Move    --------------\n"
-      [*1..50].sample
+      puts "#{EXCLAMATIONS.sample} you just got --#{attack}ed-- for #{av} hp"
+      av
     end
   end
 
