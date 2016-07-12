@@ -44,6 +44,7 @@ class PokemonCli
         case choice
         when "characters"
           Character::CHARACTERS.each { |name| puts name }
+          spacer
         when "help"
           help
         when "exit"
