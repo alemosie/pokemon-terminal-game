@@ -1,6 +1,5 @@
 require 'Bundler'
 Bundler.require
-require 'byebug'
 $: << "."
 
 # require_relative '../app/models/character'
